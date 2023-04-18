@@ -1,4 +1,5 @@
-from uk_threat_level.threat_level import RSS_FEED_URL, ThreatLevel, ThreatLevels
+from uk_threat_level.threat_level import RSS_FEED_URL, ThreatLevel
+from uk_threat_level.threat_levels import ThreatLevels
 
 import responses
 
@@ -30,8 +31,7 @@ def test_get_threat_level_uk():
     tl = ThreatLevel()
     with responses.RequestsMock() as r:
         r.add(
-            responses.GET,
-            RSS_FEED_URL,
+            responses.GET, RSS_FEED_URL,
             body=format_response(ThreatLevels.SUBSTANTIAL, ThreatLevels.UNKNOWN),
             status=200,
             content_type="text/xml; charset=utf-8"
@@ -41,16 +41,13 @@ def test_get_threat_level_uk():
         assert tl.get_threat_level_uk() == ThreatLevels.SUBSTANTIAL
 
 @responses.activate
-def test_get_threat_level_uk():
+def test_get_threat_level_ni():
     tl = ThreatLevel()
     with responses.RequestsMock() as r:
         r.add(
-            responses.GET,
-            RSS_FEED_URL,
+            responses.GET, RSS_FEED_URL,
             body=format_response(ThreatLevels.UNKNOWN, ThreatLevels.SEVERE),
-            status=200,
-            content_type="text/xml; charset=utf-8"
         )
         assert tl.update_threat_levels() == True
-
+        assert tl.was_retrieved() == True
         assert tl.get_threat_level_ni() == ThreatLevels.SEVERE
