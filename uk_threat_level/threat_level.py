@@ -1,31 +1,10 @@
-from enum import Enum
+from uk_threat_level.threat_levels import ThreatLevels
 
 import feedparser
 import re
 import requests
 
 RSS_FEED_URL = "https://www.mi5.gov.uk/UKThreatLevel/UKThreatLevel.xml"
-
-class ThreatLevels(Enum):
-    """
-    Enum with all possible ThreatLevels.
-
-    - LOW: an attack is highly unlikely
-    - MODERATE: an attack is possible, but not likely
-    - SUBSTANTIAL: an attack is likely
-    - SEVERE: an attack is highly likely
-    - CRITICAL: an attack is highly likely in the near future
-
-    - UNKNOWN: the threat level has not yet been retrieved
-    """
-    LOW = "LOW"
-    MODERATE = "MODERATE"
-    SUBSTANTIAL = "SUBSTANTIAL"
-    SEVERE = "SEVERE"
-    CRITICAL = "CRITICAL"
-
-    UNKNOWN = "UNKNOWN"
-
 
 class ThreatLevel:
 
@@ -60,4 +39,4 @@ class ThreatLevel:
         return self.threat_ni
     
     def was_retrieved(self) -> bool:
-        return self.was_retrieved
+        return self.retrieved
