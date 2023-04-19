@@ -16,8 +16,14 @@ class ThreatLevel:
     
     def update_threat_levels(self) -> bool:
         raw_feed = requests.get(RSS_FEED_URL)
+        
+        if (raw_feed.status_code != 200):
+            return False
 
         parsed_feed = feedparser.parse(raw_feed.text)
+
+        if (len(parsed_feed.entries) == 0):
+            return False
 
         current_threat_level = parsed_feed.entries[0].summary_detail.value
 
