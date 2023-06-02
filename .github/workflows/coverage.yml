@@ -24,7 +24,7 @@ jobs:
       - name: Test with pytest
         run: |
           python -m coverage run -m pytest --junitxml=test_report.xml
-          coverage xml -o coverage_report.xml
+          coverage xml -o coverage.xml
       - name: Comment Coverage PR
         uses: orgoro/coverage@v3.1
         with:
