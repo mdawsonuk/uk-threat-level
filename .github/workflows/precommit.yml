@@ -1,9 +1,9 @@
-name: pre-commit
+name: "Pre-commit Check"
 
 on: [push]
 
 jobs:
-  pre-commit:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

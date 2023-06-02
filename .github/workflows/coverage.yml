@@ -1,15 +1,14 @@
-name: 'coverage'
+name: 'Coverage'
+
 on:
-    pull_request:
-        branches:
-            - master
-            - main
+  pull_request:
+    branches:
+      - master
+      - main
 
 jobs:
-  build:
-
+  coverage:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -23,7 +22,9 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
       - name: Test with pytest
-        run: pytest --cov-report xml:coverage.xml
+        run: |
+          python -m coverage run -m pytest --junitxml=test_report.xml
+          coverage xml -o coverage_report.xml
       - name: Comment Coverage PR
         uses: orgoro/coverage@v3.1
         with:
