@@ -1,22 +1,24 @@
-from uk_threat_level.threat_levels import ThreatLevels
+import re
 
 import feedparser
-import re
 import requests
+
+from uk_threat_level.threat_levels import ThreatLevels
 
 RSS_FEED_URL = "https://www.mi5.gov.uk/UKThreatLevel/UKThreatLevel.xml"
 
+
 class ThreatLevel:
 
-    def __init__(self):
+    def __init__(self: "ThreatLevel") -> None:
         self.retrieved = False
         self.threat_uk = ThreatLevels.UNKNOWN
         self.threat_ni = ThreatLevels.UNKNOWN
         self.last_updated = None
-    
-    def update_threat_levels(self) -> bool:
+
+    def update_threat_levels(self: "ThreatLevel") -> bool:
         raw_feed = requests.get(RSS_FEED_URL)
-        
+
         if (raw_feed.status_code != 200):
             return False
 
@@ -29,8 +31,10 @@ class ThreatLevel:
 
         # Get all text results for capitalised words within the description
         # This will be in the format:
-        # "The current national threat level is <LEVEL>. The threat to Northern Ireland from Northern Ireland-related terrorism is <LEVEL>.""
-        (uk, ni) = re.findall(r"(\b[A-Z][A-Z]+|\b[A-Z]\b)", current_threat_level)
+        # "The current national threat level is <LEVEL>.
+        # The threat to Northern Ireland from Northern Ireland-related terrorism is <LEVEL>.""
+        (uk, ni) = re.findall(
+            r"(\b[A-Z][A-Z]+|\b[A-Z]\b)", current_threat_level)
 
         self.threat_uk = ThreatLevels(uk)
         self.threat_ni = ThreatLevels(ni)
@@ -38,11 +42,11 @@ class ThreatLevel:
 
         return True
 
-    def get_threat_level_uk(self) -> ThreatLevels:
+    def get_threat_level_uk(self: "ThreatLevel") -> ThreatLevels:
         return self.threat_uk
-    
-    def get_threat_level_ni(self) -> ThreatLevels:
+
+    def get_threat_level_ni(self: "ThreatLevel") -> ThreatLevels:
         return self.threat_ni
-    
-    def was_retrieved(self) -> bool:
+
+    def was_retrieved(self: "ThreatLevel") -> bool:
         return self.retrieved

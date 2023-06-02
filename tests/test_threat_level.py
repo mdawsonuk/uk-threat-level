@@ -1,8 +1,7 @@
-from uk_threat_level.threat_level import RSS_FEED_URL, ThreatLevel
-from uk_threat_level.threat_levels import ThreatLevels
-
 import responses
 
+from uk_threat_level.threat_level import RSS_FEED_URL, ThreatLevel
+from uk_threat_level.threat_levels import ThreatLevels
 
 CLOUDFLARE_BOT_RESPONSE = """<!DOCTYPE html>
 <html lang="en-US">
@@ -12,8 +11,8 @@ CLOUDFLARE_BOT_RESPONSE = """<!DOCTYPE html>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="robots" content="noindex,nofollow">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link href="/cdn-cgi/styles/challenges.css" rel="stylesheet">      
-    
+    <link href="/cdn-cgi/styles/challenges.css" rel="stylesheet">
+
 
 </head>
 <body class="no-js">
@@ -78,6 +77,7 @@ CLOUDFLARE_BOT_RESPONSE = """<!DOCTYPE html>
 </body>
 </html>"""
 
+
 def format_response(uk: ThreatLevels, ni: ThreatLevels) -> str:
     return f"""<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xml:base="https://www.mi5.gov.uk/">
     <channel>
@@ -100,19 +100,22 @@ def format_response(uk: ThreatLevels, ni: ThreatLevels) -> str:
     </channel>
     </rss>"""
 
+
 @responses.activate
 def test_get_threat_level_uk():
     tl = ThreatLevel()
     with responses.RequestsMock() as r:
         r.add(
             responses.GET, RSS_FEED_URL,
-            body=format_response(ThreatLevels.SUBSTANTIAL, ThreatLevels.UNKNOWN),
+            body=format_response(ThreatLevels.SUBSTANTIAL,
+                                 ThreatLevels.UNKNOWN),
             status=200,
             content_type="text/xml; charset=utf-8"
         )
         assert tl.update_threat_levels() == True
         assert tl.was_retrieved() == True
         assert tl.get_threat_level_uk() == ThreatLevels.SUBSTANTIAL
+
 
 @responses.activate
 def test_get_threat_level_ni():
